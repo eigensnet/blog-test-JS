@@ -1,5 +1,6 @@
 <?php
 
+namespace Database\Seeders;
  use App\User;
  use Carbon\Carbon;
  use App\Models\Tag;
@@ -12,7 +13,7 @@
  class DummyDataSeeder extends Seeder
  {
      /**
-      * Run the database seeds.
+      * Run the database seeders.
       *
       * @return void
       */
@@ -31,11 +32,11 @@
              'is_published' => rand(0, 1)
          ]);
 
-         factory(Category::class, 10)->create();
-         factory(Tag::class, 10)->create();
-         factory(User::class, 9)->create();
-         factory(Post::class, 25)->create();
-         factory(Comment::class, 40)->create();
+         Category::factory()->times(10)->create();
+         Tag::factory()->times(10)->create();
+         User::factory()->times(9)->create();
+         Post::factory()->times(25)->create();
+         Comment::factory()->times(40)->create();
 
          $data = [];
          for($i=0; $i<60; $i++) {
