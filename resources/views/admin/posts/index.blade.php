@@ -24,6 +24,7 @@
                                     <th>Category</th>
                                     <th>Tags</th>
                                     <th>Published</th>
+                                    <th>Edited</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -36,6 +37,7 @@
                                         <td>{{ $post->category->name }}</td>
                                         <td>{{ $post->tags->implode('name', ', ') }}</td>
                                         <td>{{ $post->published }}</td>
+                                        <td>{{ $post->updated_at }}</td>
                                         <td>
                                             @if (Auth::user()->is_admin)
                                                 @php

@@ -53,3 +53,28 @@
         </span>
     </div>
 </div>
+
+@php
+    if(isset($post)) {
+        $user = $post->user_id;
+    } else {
+        $user = auth()->id();
+    }
+@endphp
+
+<div class="form-group{{ $errors->has('user_id') ? ' has-error' : '' }}">
+    {!! Form::label('user_id', 'Author', ['class' => 'col-md-2 control-label']) !!}
+
+    <div class="col-md-8">
+        @if(Auth::user()->is_admin)
+            {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
+        @else
+            {{ $users[Auth::id()] }}
+            {!! Form::hidden('user_id', Auth::id()) !!}
+        @endif
+
+        <span class="help-block">
+            <strong>{{ $errors->first('user_id') }}</strong>
+        </span>
+    </div>
+</div>

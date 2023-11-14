@@ -7,12 +7,17 @@ use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use App\User;
+use App\Notifications\NewPostNotification;
 
 class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::with(['user', 'category', 'tags', 'comments'])->paginate(10);
+
+        $posts = Post::with(['user', 'category', 'tags', 'comments'])
+        ->orderBy('updated_at', 'desc')
+        ->paginate(10);
 
         return view('admin.posts.index', compact('posts'));
     }
@@ -21,8 +26,9 @@ class PostController extends Controller
     {
         $categories = Category::pluck('name', 'id')->all();
         $tags = Tag::pluck('name', 'name')->all();
+        $users = User::pluck('name', 'id')->all();
 
-        return view('admin.posts.create', compact('categories', 'tags'));
+        return view('admin.posts.create', compact('categories', 'tags', 'users'));
     }
 
     public function store(PostRequest $request)
@@ -40,6 +46,12 @@ class PostController extends Controller
                 return Tag::firstOrCreate(['name' => $tag])->id;
             }
         );
+
+        $admins = User::where('is_admin', 1)->get();
+
+        foreach ($admins as $admin) {
+            $admin->notify(new NewPostNotification($post));
+        }
 
         $post->tags()->attach($tagsId);
         flash()->overlay('Post created successfully.');
@@ -64,8 +76,9 @@ class PostController extends Controller
 
         $categories = Category::pluck('name', 'id')->all();
         $tags = Tag::pluck('name', 'name')->all();
+        $users = User::pluck('name', 'id')->all();
 
-        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
+        return view('admin.posts.edit', compact('post', 'categories', 'tags', 'users'));
     }
 
     public function update(PostRequest $request, Post $post)
@@ -75,6 +88,7 @@ class PostController extends Controller
                 'title'       => $request->title,
                 'body'        => $request->body,
                 'category_id' => $request->category_id,
+                'user_id'     => $request->user_id,
             ]
         );
 

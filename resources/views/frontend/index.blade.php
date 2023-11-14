@@ -14,7 +14,11 @@
                             {{ $post->title }} - <small>by {{ $post->user->name }}</small>
 
                             <span class="pull-right">
+                                @if ($post->created_at)
                                 {{ $post->created_at->toDayDateTimeString() }}
+                                @else
+                                No date available
+                                @endif
                             </span>
                         </div>
 

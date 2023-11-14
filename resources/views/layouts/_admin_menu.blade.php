@@ -6,5 +6,6 @@
 
     @if (Auth::user()->is_admin)
         <li><a href="{{ url('admin/users') }}">Users</a></li>
+        <li><a href="{{ url('admin/notifications') }}">Notifications</a></li>
     @endif
 </ul>
