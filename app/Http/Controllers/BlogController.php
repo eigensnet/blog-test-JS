@@ -19,7 +19,10 @@ class BlogController extends Controller
             }
         )->with('tags', 'category', 'user')
             ->withCount('comments')
-            ->published()
+            ->published();
+
+
+        $posts = $posts->orderBy($request->get('order_by', 'updated_at'), $request->get('order_direction', 'desc'))
             ->simplePaginate(5);
 
         return view('frontend.index', compact('posts'));
